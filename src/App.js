@@ -4,24 +4,51 @@ import Sidebar from './Sidebar';
 import * as XLSX from 'xlsx';
 
 function App() {
+
+  const getLocalStorage = (key, defaultValue) => {
+    const savedValue = localStorage.getItem(key);
+    if (savedValue !== null) {
+      return JSON.parse(savedValue);
+    }
+    return defaultValue;
+  };
+
   const [currentIndex, setcurrentIndex] = useState(0);
   const [inputValue, setInputValue] = useState(currentIndex + 1);
   const [data, setData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const fileInputRef = useRef();
 
-  const [excludeDuplicates, setExcludeDuplicates] = useState(true); // by checking for unique ProductURL
-  const [excludeProductNotAvailable, setExcludeProductNotAvailable] = useState(true);
-  const [excludePriceOnRequest, setExcludePriceOnRequest] = useState(true);
-  const [excludeUsedParts, setExcludeUsedParts] = useState(true);
-  const [excludeExistingProducts, setExcludeExistingProducts] = useState(true);
-  const [excludeProductsWithDefaultImage, setExcludeProductsWithDefaultImage] = useState(false);
-  const [excludeProductsWithNoImage, setExcludeProductsWithNoImage] = useState(false);
+  const [excludeDuplicates, setExcludeDuplicates] = useState(() => getLocalStorage('excludeDuplicates', true));
+  const [excludeProductNotAvailable, setExcludeProductNotAvailable] = useState(() => getLocalStorage('excludeProductNotAvailable', true));
+  const [excludePriceOnRequest, setExcludePriceOnRequest] = useState(() => getLocalStorage('excludePriceOnRequest', true));
+  const [excludeUsedParts, setExcludeUsedParts] = useState(() => getLocalStorage('excludeUsedParts', true));
+  const [excludeExistingProducts, setExcludeExistingProducts] = useState(() => getLocalStorage('excludeExistingProducts', true));
+  const [excludeProductsWithDefaultImage, setExcludeProductsWithDefaultImage] = useState(() => getLocalStorage('excludeProductsWithDefaultImage', false));
+  const [excludeProductsWithNoImage, setExcludeProductsWithNoImage] = useState(() => getLocalStorage('excludeProductsWithNoImage', false));
+
   const [filteredData, setFilteredData] = useState([])
 
   useEffect(() => {
     setInputValue(currentIndex + 1);
   }, [currentIndex]);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('sheetData');
+    if (savedData) {
+      setData(JSON.parse(savedData));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('excludeDuplicates', JSON.stringify(excludeDuplicates));
+    localStorage.setItem('excludeProductNotAvailable', JSON.stringify(excludeProductNotAvailable));
+    localStorage.setItem('excludePriceOnRequest', JSON.stringify(excludePriceOnRequest));
+    localStorage.setItem('excludeUsedParts', JSON.stringify(excludeUsedParts));
+    localStorage.setItem('excludeExistingProducts', JSON.stringify(excludeExistingProducts));
+    localStorage.setItem('excludeProductsWithDefaultImage', JSON.stringify(excludeProductsWithDefaultImage));
+    localStorage.setItem('excludeProductsWithNoImage', JSON.stringify(excludeProductsWithNoImage));
+  }, [excludeDuplicates, excludeProductNotAvailable, excludePriceOnRequest, excludeUsedParts, excludeExistingProducts, excludeProductsWithDefaultImage, excludeProductsWithNoImage]);
 
   useEffect(() => {
     if (data) {
@@ -41,12 +68,14 @@ function App() {
         if (excludeProductsWithNoImage && item.SavedProductImage === undefined) return false;
         return true;
       });
-  
-      setFilteredData(filtered);
-      setcurrentIndex(0);
+      if (filtered) {
+        setFilteredData(filtered);
+      }
+      if (filtered[currentIndex] === undefined || data[currentIndex] === undefined) {
+        setcurrentIndex(0);
+      }
     }
   }, [excludeDuplicates, excludeProductNotAvailable, excludePriceOnRequest, excludeUsedParts, excludeExistingProducts, excludeProductsWithDefaultImage, excludeProductsWithNoImage, data]);
-  
 
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -59,18 +88,21 @@ function App() {
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
       const headers = data[0];
       data.shift();
-
-      setData(data.map((row) => {
+      const processedData = data.map((row) => {
         let obj = {};
         headers.forEach((header, index) => {
           obj[header] = row[index];
         });
         return obj;
-      }));
+      });
+
+      setData(processedData);
+      localStorage.setItem('sheetData', JSON.stringify(processedData));
+      setcurrentIndex(0);
     };
     reader.readAsBinaryString(file);
-    setcurrentIndex(0);
   }
+
 
   const updateDataMarkedAs = (id, status) => {
     const filteredRow = filteredData.find(row => row.Id === id);
@@ -79,7 +111,7 @@ function App() {
     const dataRow = data.find(row => row.Id === id);
     dataRow.MarkedAs = status;
     setData([...data]);
-    localStorage.setItem('filteredData', JSON.stringify(filteredData));
+    localStorage.setItem('sheetData', JSON.stringify(data));
   };
 
   const handleRemove = () => {
@@ -101,8 +133,14 @@ function App() {
 
   const handleReset = () => {
     if (window.confirm('Are you sure you want to reset?')) {
-      console.log('Resetting...');
-      localStorage.setItem('filteredData', JSON.stringify([]));
+      localStorage.setItem('sheetData', JSON.stringify([]));
+      localStorage.setItem('excludeDuplicates', true);
+      localStorage.setItem('excludeProductNotAvailable', true);
+      localStorage.setItem('excludePriceOnRequest', true);
+      localStorage.setItem('excludeUsedParts', true);
+      localStorage.setItem('excludeExistingProducts', true);
+      localStorage.setItem('excludeProductsWithDefaultImage', false);
+      localStorage.setItem('excludeProductsWithNoImage', false);
       setFilteredData([]);
       setData([]);
       fileInputRef.current.value = null;
@@ -116,12 +154,6 @@ function App() {
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    const savedData = localStorage.getItem('filteredData');
-    if (savedData) {
-      setFilteredData(JSON.parse(savedData));
-    }
-  }, []);
 
   const handleNext = () => {
     setcurrentIndex((prevIndex) => (prevIndex + 1) % filteredData.length);
