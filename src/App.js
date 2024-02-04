@@ -88,7 +88,7 @@ function App() {
     reader.onload = (evt) => {
       const bstr = evt.target.result;
       const wb = XLSX.read(bstr, { type: 'binary' });
-      const wsname = wb.SheetNames[1];
+      const wsname = wb.SheetNames[0];
       const ws = wb.Sheets[wsname];
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
       const headers = data[0];
@@ -192,7 +192,7 @@ function App() {
       <header className="flex flex-col items-center w-full">
         <div className="flex justify-between justify-start w-full">
           <div>
-            <input className="w-36 mr-2 mt-1 px-4 py-1 mr-2 border-2 border-gray-300 rounded-md" type="number" value={inputValue} min={1} max={filteredData.length} onChange={handleIndexInput} disabled={filteredData.length === 0} />
+            <input className="w-36 mr-2 mt-1 px-4 py-1 mr-2 border-2 border-gray-300 rounded-md" type="number" value={inputValue} min={1} max={filteredData.length} onChange={handleIndexInput} disabled={filteredData.length === 0} title="Index" />
             <input ref={fileInputRef} className="cursor-pointer mr-2 mt-1" type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
           </div>
           <div className="flex lg:flex-no-wrap align-end">
@@ -226,8 +226,8 @@ function App() {
       )}
       {filteredData.length > 0 && (
         <footer className="flex items-between w-full">
-          <div onClick={handleDownload} className="w-full mr-2 mt-1" title="Stats">
-              <div>Total Records: {data.length}</div>
+          <div className="w-full mr-2 mt-1 font-mono">
+              <div title="~">Total Records: {data.length}</div>
               <div>Total Filtered: {filteredData.length}</div>
               <div>Total Kept: {totalKept}</div>
             </div>
