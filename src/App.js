@@ -96,7 +96,7 @@ function App() {
       const headers = data[0];
       data.shift();
       const processedData = data.map((row) => {
-        let obj = {};
+        const obj = {};
         headers.forEach((header, index) => {
           obj[header] = row[index];
         });
@@ -110,7 +110,6 @@ function App() {
     };
     reader.readAsBinaryString(file);
   }
-
 
   const updateDataMarkedAs = (id, status) => {
     const filteredRow = filteredData.find(row => row.Id === id);
@@ -135,8 +134,8 @@ function App() {
   const handleDownload = () => {
     const newWB = XLSX.utils.book_new();
     const newWS = XLSX.utils.json_to_sheet(filteredData);
-    XLSX.utils.book_append_sheet(newWB, newWS, "Products");
-    XLSX.writeFile(newWB, "filtered_products.xlsx");
+    XLSX.utils.book_append_sheet(newWB, newWS, 'Products');
+    XLSX.writeFile(newWB, 'filtered_products.xlsx');
   };
 
   const handleReset = () => {
@@ -153,15 +152,12 @@ function App() {
       setData([]);
       fileInputRef.current.value = null;
       setcurrentIndex(0);
-    } else {
-      console.log('Reset cancelled.');
     }
   };
 
   const handleSidebar = () => {
     setIsOpen(!isOpen);
   };
-
 
   const handleNext = () => {
     setcurrentIndex((prevIndex) => (prevIndex + 1) % filteredData.length);
