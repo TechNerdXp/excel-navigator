@@ -17,6 +17,7 @@ function App() {
   const [inputValue, setInputValue] = useState(currentIndex + 1);
   const [data, setData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setisLoading] = useState(false);
   const fileInputRef = useRef();
 
   const [excludeDuplicates, setExcludeDuplicates] = useState(() => getLocalStorage('excludeDuplicates', true));
@@ -83,6 +84,7 @@ function App() {
   }, [excludeDuplicates, excludeProductNotAvailable, excludePriceOnRequest, excludeUsedParts, excludeExistingProducts, excludeProductsWithDefaultImage, excludeProductsWithNoImage, data]);
 
   const handleFileUpload = (event) => {
+    setisLoading(true)
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (evt) => {
@@ -104,6 +106,7 @@ function App() {
       setData(processedData);
       localStorage.setItem('sheetData', JSON.stringify(processedData));
       setcurrentIndex(0);
+      setisLoading(false)
     };
     reader.readAsBinaryString(file);
   }
@@ -194,7 +197,7 @@ function App() {
           <input className="w-36 mr-2 mt-1 px-4 py-1 mr-2 border-2 border-gray-300 rounded-md" type="number" value={inputValue} min={1} max={filteredData.length} onChange={handleIndexInput} disabled={filteredData.length === 0} title="Index" />
           <input ref={fileInputRef} className="cursor-pointer mr-2 mt-1" type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
         </div>
-        <div className="flex flex-wrap md:flex-nowrap align-end">
+        <div className="flex flex-wrap lg:flex-nowrap items-start justify-end">
           <button onClick={handleDownload} className="btn flex items-center w-full mr-2 mt-1 disabled:opacity-50" title="Download" disabled={filteredData.length === 0}>
             <span>Download</span>
             <ArrowDownTrayIcon className="ml-1 w-6 h-6" />
@@ -208,8 +211,14 @@ function App() {
           </button>
         </div>
       </header>
+      {isLoading && (
+        <div className="h-[45vh]" role="status">
+          <div class="w-16 h-16 border-8 border-dashed rounded-full animate-spin border-blue-500"></div>
+          <span class="sr-only">Loading...</span>
+        </div>
+      )}
       {filteredData.length > 0 && (
-        <main className="flex flex-col items-center space-y-5">
+        <main className="flex flex-col items-center space-y-5 w-full">
           <div className="flex items-center w-72 h-72 lg:w-[50vh] lg:h-[50vh] border-blue-500">
             <img className="object-fit" src={'./images/' + currentRow.SavedProductImage} alt={currentRow.Title} />
           </div>
@@ -218,8 +227,8 @@ function App() {
           >
             {currentRow.MarkedAs === 'Kept' ? 'Kept' : 'Removed'}
           </div>
-          <h2 className="text-2xl px-5 font-bold mt-4 line-clamp-1 w-[60vw]" title={currentRow.Title}><span>{currentRow.Id}</span> - {currentRow.Title}</h2>
-          <p className="text-lg px-5 text-right text-gray-700 mt-2 text-right w-[60vw]">Price: <span className="font-bold">{currentRow.Price}</span></p>
+          <h2 className="text-2xl px-5 font-bold mt-4 line-clamp-1 w-full lg:w-[60vw]" title={currentRow.Title}><span>{currentRow.Id}</span> - {currentRow.Title}</h2>
+          <p className="text-lg px-5 text-right text-gray-700 mt-2 text-right w-full lg:w-[60vw]">Price: <span className="font-bold">{currentRow.Price}</span></p>
         </main>
       )}
       {filteredData.length > 0 && (
