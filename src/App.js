@@ -195,7 +195,7 @@ function App() {
       <header className="flex justify-between w-full">
         <div>
           <input className="w-36 mr-2 mt-1 px-4 py-1 mr-2 border-2 border-gray-300 rounded-md" type="number" value={inputValue} min={1} max={filteredData.length} onChange={handleIndexInput} disabled={filteredData.length === 0} title="Index" />
-          <input ref={fileInputRef} className="cursor-pointer mr-2 mt-1" type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
+          <input ref={fileInputRef} className="cursor-pointer mt-1 w-36 lg:w-auto" type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
         </div>
         <div className="flex flex-wrap lg:flex-nowrap items-start justify-end">
           <button onClick={handleDownload} className="btn flex items-center w-full mr-2 mt-1 disabled:opacity-50" title="Download" disabled={filteredData.length === 0}>
@@ -234,9 +234,9 @@ function App() {
       {filteredData.length > 0 && (
         <footer className="flex items-between w-full">
           <div className="w-full mr-2 mt-1 font-mono">
-            <div title="~">Total Records: {data.length}</div>
-            <div>Total Filtered: {filteredData.length}</div>
-            <div>Total Kept: {totalKept}</div>
+            <div title="~"><span className="font-bold lg:font-normal">Total Records:</span> {data.length}</div>
+            <div><span className="font-bold lg:font-normal">Total Filtered:</span> {filteredData.length}</div>
+            <div><span className="font-bold lg:font-normal">Total Kept:</span> {totalKept}</div>
           </div>
           <div className="flex flex-col items-end">
             <div className="flex my-4">
