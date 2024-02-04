@@ -223,9 +223,9 @@ function App() {
             <img className="object-fit" src={'./images/' + currentRow.SavedProductImage} alt={currentRow.Title} />
           </div>
           <div
-            className={`w-48 text-center py-1 ${currentRow.MarkedAs === 'Kept' ? 'bg-green-500' : 'bg-red-500'} text-white`}
+            className={`w-48 text-center py-1 ${currentRow.MarkedAs ? (currentRow.MarkedAs === 'Kept' ? 'bg-green-500' : 'bg-red-500') : ''} text-white`}
           >
-            {currentRow.MarkedAs === 'Kept' ? 'Kept' : 'Removed'}
+            {currentRow.MarkedAs ? (currentRow.MarkedAs === 'Kept' ? 'Kept' : 'Removed') : '&nbsp;'}
           </div>
           <h2 className="text-2xl px-5 font-bold mt-4 line-clamp-1 w-full lg:w-[60vw]" title={currentRow.Title}><span>{currentRow.Id}</span> - {currentRow.Title}</h2>
           <p className="text-lg px-5 text-right text-gray-700 mt-2 text-right w-full lg:w-[60vw]">Price: <span className="font-bold">{currentRow.Price}</span></p>
