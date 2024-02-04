@@ -189,25 +189,23 @@ function App() {
 
   return (
     <div className="flex flex-col items-center justify-between h-screen p-5 lg:w-[60vw] m-auto">
-      <header className="flex flex-col items-center w-full">
-        <div className="flex justify-between w-full">
-          <div>
-            <input className="w-36 mr-2 mt-1 px-4 py-1 mr-2 border-2 border-gray-300 rounded-md" type="number" value={inputValue} min={1} max={filteredData.length} onChange={handleIndexInput} disabled={filteredData.length === 0} title="Index" />
-            <input ref={fileInputRef} className="cursor-pointer mr-2 mt-1" type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
-          </div>
-          <div className="flex lg:flex-no-wrap align-end">
-            <button onClick={handleDownload} className="btn flex items-center w-full mr-2 mt-1 disabled:opacity-50" title="Download" disabled={filteredData.length === 0}>
-              <span>Download</span>
-              <ArrowDownTrayIcon className="ml-1 w-6 h-6" />
-            </button>
-            <button onClick={handleReset} className="btn flex items-center w-full mr-2 mt-1 disabled:opacity-50" title="Reset" disabled={filteredData.length === 0}>
-              <span>Reset</span>
-              <ArrowPathRoundedSquareIcon className="ml-1 w-6 h-6" />
-            </button>
-            <button onClick={handleSidebar} className="btn w-full mr-2 mt-1 disabled:opacity-50" title="Settings" disabled={filteredData.length === 0}>
-              <CogIcon className="w-6 h-6" />
-            </button>
-          </div>
+      <header className="flex justify-between w-full">
+        <div>
+          <input className="w-36 mr-2 mt-1 px-4 py-1 mr-2 border-2 border-gray-300 rounded-md" type="number" value={inputValue} min={1} max={filteredData.length} onChange={handleIndexInput} disabled={filteredData.length === 0} title="Index" />
+          <input ref={fileInputRef} className="cursor-pointer mr-2 mt-1" type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
+        </div>
+        <div className="flex flex-wrap md:flex-nowrap align-end">
+          <button onClick={handleDownload} className="btn flex items-center w-full mr-2 mt-1 disabled:opacity-50" title="Download" disabled={filteredData.length === 0}>
+            <span>Download</span>
+            <ArrowDownTrayIcon className="ml-1 w-6 h-6" />
+          </button>
+          <button onClick={handleReset} className="btn flex items-center w-full mr-2 mt-1 disabled:opacity-50" title="Reset" disabled={filteredData.length === 0}>
+            <span>Reset</span>
+            <ArrowPathRoundedSquareIcon className="ml-1 w-6 h-6" />
+          </button>
+          <button onClick={handleSidebar} className="btn w-full mr-2 mt-1 disabled:opacity-50" title="Settings" disabled={filteredData.length === 0}>
+            <CogIcon className="w-6 h-6" />
+          </button>
         </div>
       </header>
       {filteredData.length > 0 && (
@@ -227,10 +225,10 @@ function App() {
       {filteredData.length > 0 && (
         <footer className="flex items-between w-full">
           <div className="w-full mr-2 mt-1 font-mono">
-              <div title="~">Total Records: {data.length}</div>
-              <div>Total Filtered: {filteredData.length}</div>
-              <div>Total Kept: {totalKept}</div>
-            </div>
+            <div title="~">Total Records: {data.length}</div>
+            <div>Total Filtered: {filteredData.length}</div>
+            <div>Total Kept: {totalKept}</div>
+          </div>
           <div className="flex flex-col items-end">
             <div className="flex my-4">
               <button onClick={handleRemove} className="btn flex mr-2" title="Marke as kept in the output excel file."><span>Remove</span><HandThumbDownIcon className="ml-1 w-6 h-6" /></button>
