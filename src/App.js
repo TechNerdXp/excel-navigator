@@ -233,10 +233,10 @@ function App() {
       )}
       {filteredData.length > 0 && (
         <footer className="flex items-between w-full">
-          <div className="w-full mr-2 mt-1 font-mono">
-            <div title="~"><span className="font-bold lg:font-normal">Total Records:</span> {data.length}</div>
-            <div><span className="font-bold lg:font-normal">Total Filtered:</span> {filteredData.length}</div>
-            <div><span className="font-bold lg:font-normal">Total Kept:</span> {totalKept}</div>
+          <div className="w-full flex flex-col justify-center font-mono">
+            <div title="~"><span className="font-bold lg:font-normal">Total:</span> {data.length}</div>
+            <div><span className="font-bold lg:font-normal">Filtered:</span> {filteredData.length}</div>
+            <div><span className="font-bold lg:font-normal">Kept:</span> {totalKept}</div>
           </div>
           <div className="flex flex-col items-end">
             <div className="flex my-4">
