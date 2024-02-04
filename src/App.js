@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { CogIcon } from '@heroicons/react/24/solid';
+import { CogIcon, ArrowDownTrayIcon, ArrowPathRoundedSquareIcon, HandThumbUpIcon, HandThumbDownIcon, ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/24/solid';
 import Sidebar from './Sidebar';
 import * as XLSX from 'xlsx';
 
@@ -28,6 +28,11 @@ function App() {
   const [excludeProductsWithNoImage, setExcludeProductsWithNoImage] = useState(() => getLocalStorage('excludeProductsWithNoImage', false));
 
   const [filteredData, setFilteredData] = useState([])
+  const [totalKept, setTotalKept] = useState(0)
+
+  useEffect(() => {
+    setTotalKept(filteredData.filter(rec => rec.MarkedAs === 'Kept').length);
+  }, [filteredData]);
 
   useEffect(() => {
     setInputValue(currentIndex + 1);
@@ -83,7 +88,7 @@ function App() {
     reader.onload = (evt) => {
       const bstr = evt.target.result;
       const wb = XLSX.read(bstr, { type: 'binary' });
-      const wsname = wb.SheetNames[0];
+      const wsname = wb.SheetNames[1];
       const ws = wb.Sheets[wsname];
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
       const headers = data[0];
@@ -191,9 +196,15 @@ function App() {
             <input ref={fileInputRef} className="cursor-pointer mr-2 mt-1" type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
           </div>
           <div className="flex lg:flex-no-wrap align-end">
-            <button onClick={handleDownload} className="btn w-full mr-2 mt-1 disabled:opacity-50" disabled={filteredData.length === 0}>Download</button>
-            <button onClick={handleReset} className="btn w-full mr-2 mt-1 disabled:opacity-50" disabled={filteredData.length === 0}>Reset</button>
-            <button onClick={handleSidebar} className="btn w-full mr-2 mt-1 disabled:opacity-50" disabled={filteredData.length === 0}>
+            <button onClick={handleDownload} className="btn flex w-full mr-2 mt-1 disabled:opacity-50" title="Download" disabled={filteredData.length === 0}>
+              <span>Download</span>
+              <ArrowDownTrayIcon className="ml-1 w-6 h-6" />
+            </button>
+            <button onClick={handleReset} className="btn flex w-full mr-2 mt-1 disabled:opacity-50" title="Reset" disabled={filteredData.length === 0}>
+              <span>Reset</span>
+              <ArrowPathRoundedSquareIcon className="ml-1 w-6 h-6" />
+            </button>
+            <button onClick={handleSidebar} className="btn w-full mr-2 mt-1 disabled:opacity-50" title="Settings" disabled={filteredData.length === 0}>
               <CogIcon className="w-6 h-6" />
             </button>
           </div>
@@ -214,14 +225,21 @@ function App() {
         </main>
       )}
       {filteredData.length > 0 && (
-        <footer className="flex flex-col items-end w-full">
-          <div className="my-4">
-            <button onClick={handleRemove} className="btn mr-2">Remove</button>
-            <button onClick={handleKeep} className="btn ml-2">Keep</button>
-          </div>
+        <footer className="flex items-between w-full">
+          <div onClick={handleDownload} className="w-full mr-2 mt-1" title="Stats">
+              <div>Total Records: {data.length}</div>
+              <div>Total Filtered: {filteredData.length}</div>
+              <div>Total Kept: {totalKept}</div>
+            </div>
           <div>
-            <button onClick={handlePrev} className="btn mr-2">&lt;</button>
-            <button onClick={handleNext} className="btn ml-2">&gt;</button>
+            <div className="flex my-4">
+              <button onClick={handleRemove} className="btn flex mr-2" title="Marke as kept in the output excel file."><span>Remove</span><HandThumbDownIcon className="ml-1 w-6 h-6" /></button>
+              <button onClick={handleKeep} className="btn flex ml-2" title="Marke as removed in the output excel file."><span>Keep</span><HandThumbUpIcon className="ml-1 w-6 h-6" /></button>
+            </div>
+            <div className="flex">
+              <button onClick={handlePrev} className="btn flex mr-2"><ChevronDoubleLeftIcon className="ml-1 w-6 h-6" /></button>
+              <button onClick={handleNext} className="btn flex ml-2"><ChevronDoubleRightIcon className="ml-1 w-6 h-6" /></button>
+            </div>
           </div>
         </footer>
       )}
