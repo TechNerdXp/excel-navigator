@@ -190,17 +190,17 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-between h-screen p-5 lg:w-[60vw] m-auto">
       <header className="flex flex-col items-center w-full">
-        <div className="flex justify-between justify-start w-full">
+        <div className="flex justify-between w-full">
           <div>
             <input className="w-36 mr-2 mt-1 px-4 py-1 mr-2 border-2 border-gray-300 rounded-md" type="number" value={inputValue} min={1} max={filteredData.length} onChange={handleIndexInput} disabled={filteredData.length === 0} title="Index" />
             <input ref={fileInputRef} className="cursor-pointer mr-2 mt-1" type="file" accept=".xlsx,.xls" onChange={handleFileUpload} />
           </div>
           <div className="flex lg:flex-no-wrap align-end">
-            <button onClick={handleDownload} className="btn flex w-full mr-2 mt-1 disabled:opacity-50" title="Download" disabled={filteredData.length === 0}>
+            <button onClick={handleDownload} className="btn flex items-center w-full mr-2 mt-1 disabled:opacity-50" title="Download" disabled={filteredData.length === 0}>
               <span>Download</span>
               <ArrowDownTrayIcon className="ml-1 w-6 h-6" />
             </button>
-            <button onClick={handleReset} className="btn flex w-full mr-2 mt-1 disabled:opacity-50" title="Reset" disabled={filteredData.length === 0}>
+            <button onClick={handleReset} className="btn flex items-center w-full mr-2 mt-1 disabled:opacity-50" title="Reset" disabled={filteredData.length === 0}>
               <span>Reset</span>
               <ArrowPathRoundedSquareIcon className="ml-1 w-6 h-6" />
             </button>
@@ -220,8 +220,8 @@ function App() {
           >
             {currentRow.MarkedAs === 'Kept' ? 'Kept' : 'Removed'}
           </div>
-          <h2 className="text-2xl font-bold mt-4 line-clamp-1 w-[60vw]" title={currentRow.Title}><span>{currentRow.Id}</span> - {currentRow.Title}</h2>
-          <p className="text-lg text-right text-gray-700 mt-2 text-right w-[60vw]">Price: <span className="font-bold">{currentRow.Price}</span></p>
+          <h2 className="text-2xl px-5 font-bold mt-4 line-clamp-1 w-[60vw]" title={currentRow.Title}><span>{currentRow.Id}</span> - {currentRow.Title}</h2>
+          <p className="text-lg px-5 text-right text-gray-700 mt-2 text-right w-[60vw]">Price: <span className="font-bold">{currentRow.Price}</span></p>
         </main>
       )}
       {filteredData.length > 0 && (
@@ -231,7 +231,7 @@ function App() {
               <div>Total Filtered: {filteredData.length}</div>
               <div>Total Kept: {totalKept}</div>
             </div>
-          <div>
+          <div className="flex flex-col items-end">
             <div className="flex my-4">
               <button onClick={handleRemove} className="btn flex mr-2" title="Marke as kept in the output excel file."><span>Remove</span><HandThumbDownIcon className="ml-1 w-6 h-6" /></button>
               <button onClick={handleKeep} className="btn flex ml-2" title="Marke as removed in the output excel file."><span>Keep</span><HandThumbUpIcon className="ml-1 w-6 h-6" /></button>
