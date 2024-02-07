@@ -81,7 +81,7 @@ function App() {
         setcurrentIndex(0);
       }
     }
-  }, [excludeDuplicates, excludeProductNotAvailable, excludePriceOnRequest, excludeUsedParts, excludeExistingProducts, excludeProductsWithDefaultImage, excludeProductsWithNoImage, data]);
+  }, [excludeDuplicates, excludeProductNotAvailable, excludePriceOnRequest, excludeUsedParts, excludeExistingProducts, excludeProductsWithDefaultImage, excludeProductsWithNoImage, data, currentIndex]);
 
   const handleFileUpload = (event) => {
     setisLoading(true)
@@ -104,9 +104,9 @@ function App() {
       });
 
       setData(processedData);
-      localStorage.setItem('sheetData', JSON.stringify(processedData));
       setcurrentIndex(0);
       setisLoading(false)
+      localStorage.setItem('sheetData', JSON.stringify(processedData));
     };
     reader.readAsBinaryString(file);
   }
@@ -124,11 +124,17 @@ function App() {
   const handleRemove = () => {
     const id = filteredData[currentIndex].Id;
     updateDataMarkedAs(id, 'Removed');
+    setTimeout(() => {
+      handleNext();
+    }, 200);
   };
 
   const handleKeep = () => {
     const id = filteredData[currentIndex].Id;
     updateDataMarkedAs(id, 'Kept');
+    setTimeout(() => {
+      handleNext();
+    }, 200);
   };
 
   const handleDownload = () => {
@@ -184,6 +190,34 @@ function App() {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      switch (event.key) {
+        case 'ArrowLeft':
+          handlePrev();
+          break;
+        case 'ArrowRight':
+          handleNext();
+          break;
+        case 'ArrowUp':
+          handleKeep();
+          break;
+        case 'ArrowDown':
+          handleRemove();
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Cleanup on unmount
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handlePrev, handleNext, handleKeep, handleRemove]);
+
   const currentRow = filteredData[currentIndex];
 
   return (
@@ -236,8 +270,8 @@ function App() {
           </div>
           <div className="flex flex-col items-end">
             <div className="flex my-4">
-              <button onClick={handleRemove} className="btn flex mr-2" title="Marke as kept in the output excel file."><span>Remove</span><HandThumbDownIcon className="ml-1 w-6 h-6" /></button>
-              <button onClick={handleKeep} className="btn flex ml-2" title="Marke as removed in the output excel file."><span>Keep</span><HandThumbUpIcon className="ml-1 w-6 h-6" /></button>
+              <button onClick={handleRemove} className="btn flex mr-2  active:bg-red-500" title="Marke as kept in the output excel file."><span>Remove</span><HandThumbDownIcon className="ml-1 w-6 h-6" /></button>
+              <button onClick={handleKeep} className="btn flex ml-2 active:bg-green-500" title="Marke as removed in the output excel file."><span>Keep</span><HandThumbUpIcon className="ml-1 w-6 h-6" /></button>
             </div>
             <div className="flex">
               <button onClick={handlePrev} className="btn flex mr-2"><ChevronDoubleLeftIcon className="ml-1 w-6 h-6" /></button>
