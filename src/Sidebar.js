@@ -1,7 +1,7 @@
 import React from 'react';
 import { Switch } from '@headlessui/react';
 
-export default function Sidebar({ isOpen, excludeDuplicates, setExcludeDuplicates, excludeProductNotAvailable, setExcludeProductNotAvailable, excludePriceOnRequest, setExcludePriceOnRequest, excludeUsedParts, setExcludeUsedParts, excludeExistingProducts, setExcludeExistingProducts, excludeProductsWithDefaultImage, setExcludeProductsWithDefaultImage, excludeProductsWithNoImage, setExcludeProductsWithNoImage }) {
+export default function Sidebar({ isOpen, excludeDuplicates, setExcludeDuplicates, excludeProductNotAvailable, setExcludeProductNotAvailable, excludePriceOnRequest, setExcludePriceOnRequest, excludeCategories, setExcludeCategories, excludeExistingProducts, setExcludeExistingProducts, excludeProductsWithDefaultImage, setExcludeProductsWithDefaultImage, excludeProductsWithNoImage, setExcludeProductsWithNoImage }) {
     return (
         <div className={`flex flex-col justify-center fixed right-0 top-[20vh] w-90 bg-white text-gray-800 transition-transform duration-200 ease-in-out shadow-lg ${isOpen ? 'transform translate-x-0' : 'transform translate-x-full'}`}>
             <h1 className="text-2xl font-extrabold p-5">Filters</h1>
@@ -53,14 +53,14 @@ export default function Sidebar({ isOpen, excludeDuplicates, setExcludeDuplicate
                 </Switch.Group>
                 <Switch.Group as="div" className="flex items-center space-x-4 mt-4">
                     <Switch
-                        checked={excludeUsedParts}
-                        onChange={setExcludeUsedParts}
-                        className={`${excludeUsedParts ? 'bg-blue-600' : 'bg-gray-200'
-                            } relative inline-flex items-center h-6 rounded-full w-11`}
+                        checked={excludeCategories}
+                        onChange={setExcludeCategories}
+                        className={`${excludeCategories ? 'bg-blue-600' : 'bg-gray-200'
+                        } relative inline-flex items-center h-6 rounded-full w-11`}
                     >
-                        <span className="sr-only">Exclude Used Parts</span>
+                        <span className="sr-only">Exclude Categories</span>
                         <span
-                            className={`${excludeUsedParts ? 'translate-x-6' : 'translate-x-1'
+                            className={`${excludeCategories ? 'translate-x-6' : 'translate-x-1'
                                 } inline-block w-4 h-4 transform bg-white rounded-full`}
                         />
                     </Switch>
