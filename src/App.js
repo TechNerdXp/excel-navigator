@@ -254,7 +254,7 @@ function App() {
           {currentRow.SavedCatImage !== currentRow.SavedProductImage ? (
             <div className="flex justify-center items-center w-72 h-72 lg:w-full lg:h-[50vh] border-blue-500">
               <img className="object-contain w-1/2 h-full" src={'./images/' + currentRow.SavedProductImage} alt={currentRow['Final Result']} />
-              <img className="object-contain w-1/2 h-full border-dotted border-r-2 border-gray-200" src={'./images/' + currentRow.SavedCatImage} alt={currentRow.Tree} />
+              <img className="object-contain w-1/2 h-full border-dotted border-l-2 border-gray-200" src={'./images/' + currentRow.SavedCatImage} alt={currentRow.Tree} />
             </div>
           ) : (
             <div className="flex justify-center items-center w-72 h-72 lg:w-full lg:h-[50vh] border-blue-500">
